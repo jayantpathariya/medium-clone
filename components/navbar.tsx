@@ -58,7 +58,7 @@ const Navbar = () => {
           Sign In
         </Link>
         <Link href="/sign-up" className="btn-light hidden py-2 md:block">
-          Sign In
+          Sign Up
         </Link>
       </div>
     </header>
