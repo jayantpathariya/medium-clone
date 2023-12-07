@@ -6,8 +6,8 @@ import Image from "next/image";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { SignUpSchema } from "@/lib/validation";
+import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
+import { SignInSchema, SignUpSchema } from "@/lib/validation";
 
 import Input from "@/components/input";
 import toast from "react-hot-toast";
@@ -40,10 +40,17 @@ const Form = () => {
     }
   };
 
+  const onError: SubmitErrorHandler<z.infer<typeof SignInSchema>> = (error) => {
+    const errorArray = Object.values(error);
+    if (errorArray.length > 0 && errorArray[0].message) {
+      toast.error(errorArray[0].message);
+    }
+  };
+
   return (
     <form
       className="w-[80%] max-w-[400px]"
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit, onError)}
     >
       <h1 className="mb-24 text-center font-gelasio text-4xl capitalize">
         Join us today

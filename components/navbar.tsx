@@ -3,13 +3,32 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { FileEdit, Search } from "lucide-react";
+import { Bell, FileEdit, Search } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { UserSession } from "@/lib/types";
+import { Menu } from "./menu";
 
 const Navbar = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
+  const session = useSession();
+
+  const user = session?.data?.user as UserSession;
 
   const toggleShowSearch = () => {
     setShowSearch((prev) => !prev);
+  };
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      setShowMenu(false);
+    }, 200);
   };
 
   return (
@@ -54,12 +73,41 @@ const Navbar = () => {
           <p>Write</p>
         </Link>
 
-        <Link href="/sign-in" className="btn-dark py-2">
-          Sign In
-        </Link>
-        <Link href="/sign-up" className="btn-light hidden py-2 md:block">
-          Sign Up
-        </Link>
+        {user ? (
+          <>
+            <Link href="/dashboard/notification">
+              <button className="relative flex h-12 w-12 items-center justify-center rounded-full bg-grey hover:bg-black/10">
+                <Bell size={20} className="stroke-dark-grey" />
+              </button>
+            </Link>
+
+            <div className="relative">
+              <button
+                onClick={toggleMenu}
+                onBlur={handleBlur}
+                className="mt-1 h-12 w-12"
+              >
+                <Image
+                  src={user.profile_img}
+                  alt={`${user.fullname}image`}
+                  width={12}
+                  height={12}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              </button>
+              {showMenu && <Menu />}
+            </div>
+          </>
+        ) : (
+          <>
+            <Link href="/sign-in" className="btn-dark py-2">
+              Sign In
+            </Link>
+            <Link href="/sign-up" className="btn-light hidden py-2 md:block">
+              Sign Up
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
