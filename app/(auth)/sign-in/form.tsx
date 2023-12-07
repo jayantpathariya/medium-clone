@@ -37,6 +37,7 @@ const Form = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Wrong email or password");
     }
   };
 
@@ -90,6 +91,7 @@ const Form = () => {
       <button
         type="button"
         className="btn-dark center flex w-[90%] items-center justify-center gap-4"
+        onClick={() => signIn("google")}
       >
         <Image
           src="/images/google.png"

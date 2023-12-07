@@ -4,13 +4,14 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import z from "zod";
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, SubmitErrorHandler, useForm } from "react-hook-form";
 import { SignInSchema, SignUpSchema } from "@/lib/validation";
 
 import Input from "@/components/input";
-import toast from "react-hot-toast";
 
 const Form = () => {
   const router = useRouter();
@@ -98,6 +99,7 @@ const Form = () => {
       <button
         type="button"
         className="btn-dark center flex w-[90%] items-center justify-center gap-4"
+        onClick={() => signIn("google")}
       >
         <Image
           src="/images/google.png"
