@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/navbar";
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Medium",
@@ -15,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Toaster />
         <Navbar />
         {children}
       </body>
