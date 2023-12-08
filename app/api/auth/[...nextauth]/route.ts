@@ -24,6 +24,12 @@ async function signIn(credentials: any) {
       throw new Error("No user found");
     }
 
+    if (user.google_auth) {
+      throw new Error(
+        "Account already exists. Please sign in with your Google account",
+      );
+    }
+
     const isPasswordValid = await compare(
       password,
       user.personal_info.password,
@@ -50,12 +56,12 @@ async function signIn(credentials: any) {
   }
 }
 
-async function signUp(user: any) {
+async function signUpFromGoogle(user: any) {
   try {
     if (!user) {
       throw new Error("Something went wrong");
     }
-    const { name, email, picture } = user;
+    const { name, email } = user;
 
     connectToDatabase();
 
@@ -72,14 +78,12 @@ async function signUp(user: any) {
         );
       }
     } else {
-      const profile_image = picture.replace("s96-c", "s384-c");
       const username = await generateUsername(email);
 
       newUser = await User.create({
         personal_info: {
           fullname: name,
           email,
-          profile_img: profile_image,
           username,
         },
         google_auth: true,
@@ -115,38 +119,46 @@ export const authOptions = {
           }
 
           return user;
-        } catch (error) {
+        } catch (error: any) {
           console.log(error);
-          throw new Error("Something went wrong");
+          throw new Error(error.message);
         }
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user, account, profile }: any) {
-      if (account?.provider === "google") {
-        const dbUser = await signUp(profile);
+      try {
+        if (account?.provider === "google") {
+          const dbUser = await signUpFromGoogle(profile);
 
-        token.username = dbUser.personal_info.username;
-        token.fullname = dbUser.personal_info.fullname;
-        token.profile_img = dbUser.personal_info.profile_img;
-      } else {
-        if (user) {
-          token.username = user.personal_info.username;
-          token.fullname = user.personal_info.fullname;
-          token.profile_img = user.personal_info.profile_img;
+          token.username = dbUser.personal_info.username;
+          token.fullname = dbUser.personal_info.fullname;
+          token.profile_img = dbUser.personal_info.profile_img;
+        } else {
+          if (user) {
+            token.username = user.personal_info.username;
+            token.fullname = user.personal_info.fullname;
+            token.profile_img = user.personal_info.profile_img;
+          }
         }
+        return token;
+      } catch (error) {
+        throw error;
       }
-      return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      if (token) {
-        session.user.username = token.username;
-        session.user.fullname = token.fullname;
-        session.user.profile_img = token.profile_img;
-      }
+      try {
+        if (token) {
+          session.user.username = token.username;
+          session.user.fullname = token.fullname;
+          session.user.profile_img = token.profile_img;
+        }
 
-      return session;
+        return session;
+      } catch (error) {
+        throw error;
+      }
     },
   },
 };

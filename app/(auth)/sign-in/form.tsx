@@ -31,9 +31,15 @@ const Form = () => {
         redirect: false,
       });
 
+      console.log(response);
+
       if (response?.ok) {
         router.push("/");
         router.refresh();
+      } else {
+        if (response?.error) {
+          toast.error(response?.error);
+        }
       }
     } catch (error) {
       console.log(error);
