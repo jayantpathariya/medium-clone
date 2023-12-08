@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Bell, FileEdit, Search } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { Session } from "next-auth";
 import { UserSession } from "@/lib/types";
 import { Menu } from "./menu";
 
