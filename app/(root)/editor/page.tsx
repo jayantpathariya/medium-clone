@@ -2,12 +2,10 @@
 
 import { BlogEditor } from "@/components/blog-editor";
 import BlogPublish from "@/components/blog-publish";
-import { useState } from "react";
+import { useEditor } from "@/context/editor-provider";
 
 const EditorPage = () => {
-  const [editorState, setEditorState] = useState<"editor" | "publish">(
-    "editor",
-  );
+  const { editorState } = useEditor();
 
   return editorState === "editor" ? <BlogEditor /> : <BlogPublish />;
 };

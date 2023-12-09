@@ -135,11 +135,13 @@ export const authOptions = {
           token.username = dbUser.personal_info.username;
           token.fullname = dbUser.personal_info.fullname;
           token.profile_img = dbUser.personal_info.profile_img;
+          token.id = dbUser._id;
         } else {
           if (user) {
             token.username = user.personal_info.username;
             token.fullname = user.personal_info.fullname;
             token.profile_img = user.personal_info.profile_img;
+            token.id = user._id;
           }
         }
         return token;
@@ -153,6 +155,7 @@ export const authOptions = {
           session.user.username = token.username;
           session.user.fullname = token.fullname;
           session.user.profile_img = token.profile_img;
+          session.user.id = token.id;
         }
 
         return session;

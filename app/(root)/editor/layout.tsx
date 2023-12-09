@@ -1,10 +1,11 @@
-import { EditorNavbar } from "@/components/editor-navbar";
+"use client";
+
+import { EditorProvider } from "@/context/editor-provider";
 
 const EditorLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <EditorNavbar />
-      {children}
+      <EditorProvider>{children}</EditorProvider>
     </>
   );
 };
