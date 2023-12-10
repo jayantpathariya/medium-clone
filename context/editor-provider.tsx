@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import EditorJS, { OutputBlockData } from "@editorjs/editorjs";
 
-type Blog = {
+type BlogType = {
   title: string;
   banner: string;
   content: OutputBlockData[];
@@ -16,7 +16,7 @@ type Blog = {
   };
 };
 
-const blogStructure: Blog = {
+const blogStructure: BlogType = {
   title: "",
   banner: "",
   content: [],

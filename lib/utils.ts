@@ -1,22 +1,49 @@
-import User from "@/database/user.model";
-import { nanoid } from "nanoid";
-import { connectToDatabase } from "./mongoose";
+import qs from "query-string";
 
-export async function generateUsername(email: string) {
-  let username = email.split("@")[0];
-
-  try {
-    connectToDatabase();
-    const isUsernameExist = await User.findOne({
-      "personal_info.username": username,
-    });
-
-    if (isUsernameExist) {
-      username = `${username}${nanoid(4)}`;
-    }
-
-    return username;
-  } catch (error) {
-    throw error;
-  }
+interface UrlQueryParams {
+  params: string;
+  key: string;
+  value: string;
 }
+
+export const generateUrlQuery = ({ params, key, value }: UrlQueryParams) => {
+  const currentUrl = qs.parse(params);
+
+  currentUrl[key] = value;
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    {
+      skipNull: true,
+    },
+  );
+};
+
+interface RemoveUrlQueryParams {
+  params: string;
+  keysToRemove: string[];
+}
+
+export const removeKeysFromUrl = ({
+  params,
+  keysToRemove,
+}: RemoveUrlQueryParams) => {
+  const currentUrl = qs.parse(params);
+
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key];
+  });
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    {
+      skipNull: true,
+    },
+  );
+};

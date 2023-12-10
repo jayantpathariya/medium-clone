@@ -6,7 +6,7 @@ import User from "@/database/user.model";
 import { connectToDatabase } from "@/lib/mongoose";
 import { SignInSchema } from "@/lib/validation";
 import { ZodError } from "zod";
-import { generateUsername } from "@/lib/utils";
+import { generateUsername } from "@/lib/helper";
 
 async function signIn(credentials: any) {
   try {

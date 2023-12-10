@@ -2,15 +2,16 @@ import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 import { connectToDatabase } from "@/lib/mongoose";
 import User from "@/database/user.model";
-import { generateUsername } from "@/lib/utils";
+
 import { SignUpSchema } from "@/lib/validation";
 import { ZodError } from "zod";
+import { generateUsername } from "@/lib/helper";
 
 export async function POST(req: Request) {
   try {
     const { fullname, email, password } = await req.json();
 
-    await SignUpSchema.parseAsync(req.body);
+    await SignUpSchema.parseAsync({ fullname, email, password });
 
     const userExists = await User.findOne({
       "personal_info.email": email,
